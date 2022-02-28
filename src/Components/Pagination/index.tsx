@@ -9,36 +9,36 @@ type Props = {
 
 export default function Pagination({ count, currentPage, onChange }: Props) {
   const [buttons, setButtons] = useState<number[]>([]);
+  const [siblingCount, setSiblingCount] = useState(1);
   const [minorInterval, setMinorInterval] = useState(false);
   const [majorInterval, setMajorInterval] = useState(false);
-  const [hideCentral, setHideCentral] = useState(false)
+  const [hideCentral, setHideCentral] = useState(false);
 
   function verifyInterval() {
-
     //Se estiver na primeira pág ou na última, o botão central não precisa ser exibido
-    if(currentPage === 1 || currentPage === count){
-      setHideCentral(true)
-    }else{
-      setHideCentral(false)      
+    if (currentPage === 1 || currentPage === count) {
+      setHideCentral(true);
+    } else {
+      setHideCentral(false);
     }
 
-    if(currentPage - 1 === 1){
-      setHideCentral(false)  
+    if (currentPage - 1 === 1) {
+      setHideCentral(false);
     }
 
     if (currentPage - 1 !== 1) {
       setMinorInterval(true);
-    }else{
+    } else {
       setMinorInterval(false);
     }
 
-    if (currentPage === 1 ||currentPage === count ) {
+    if (currentPage === 1 || currentPage === count) {
       setMinorInterval(false);
     }
 
     if (currentPage + 1 !== count) {
       setMajorInterval(true);
-    }else{
+    } else {
       setMajorInterval(false);
     }
   }
@@ -71,7 +71,7 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
       if (element === currentPage) {
         const t = (
           <button
-            data-centralButton="true"
+            data-centralButton
             type="button"
             className={element === currentPage ? "selected" : ""}
             onClick={() => onChange(element)}
@@ -87,38 +87,40 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
 
   return (
     <div className="containerCentralPagination">
-      <button type="button" onClick={decrease} className="button">
+      <button data-prev type="button" onClick={decrease} className="button">
         ⬅️
       </button>
 
       <button
+        data-firstpage
         type="button"
-        className={[1 === currentPage ? "selected" : "", "button"].toString().replace(',',' ')}
+        className={[1 === currentPage ? "selected" : "", "button"]
+          .toString()
+          .replace(",", " ")}
         onClick={() => onChange(1)}
       >
         {1}
       </button>
-      
-      {minorInterval && <div className="interval">...</div>}
 
-  {
-    currentPage - 1 > 1 && (
-<button
+      {/* {!hideCentral && Build()} */}
+
+      {currentPage !== 1 && currentPage !== count && (
+        <button
+          data-centralButton
           type="button"
-          className="button"
-          onClick={() => onChange(currentPage - 1)}
+          className={currentPage === currentPage ? "selected" : ""}
+          onClick={() => onChange(currentPage)}
         >
-          {currentPage - 1}
+          {currentPage}
         </button>
-    )
-  }
-          
+      )}
 
-      {!hideCentral && Build()}
-      {majorInterval && <div className="interval">...</div>}
       <button
+        data-lastpage
         type="button"
-        className={[count === currentPage ? "selected" : "", "button"].toString().replace(',',' ')}
+        className={[count === currentPage ? "selected" : "", "button"]
+          .toString()
+          .replace(",", " ")}
         onClick={() => onChange(count)}
       >
         {count}
