@@ -9,7 +9,7 @@ type Props = {
 
 export default function Pagination({ count, currentPage, onChange }: Props) {
   const [buttons, setButtons] = useState<number[]>([]);
-  const [siblingCount, setSiblingCount] = useState(1);
+  const [siblingCount, setSiblingCount] = useState(2);
   const [minorInterval, setMinorInterval] = useState(false);
   const [majorInterval, setMajorInterval] = useState(false);
   const [hideCentral, setHideCentral] = useState(false);
@@ -65,29 +65,15 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
     setButtons([...buttonsTemp]);
   }, [count]);
 
-  function Build() {
-    const b: JSX.Element[] = [];
-    buttons.forEach((element) => {
-      if (element === currentPage) {
-        const t = (
-          <button
-            data-centralButton
-            type="button"
-            className={element === currentPage ? "selected" : ""}
-            onClick={() => onChange(element)}
-          >
-            {element}
-          </button>
-        );
-        b.push(t);
-      }
-    });
-    return b;
-  }
-
   return (
     <div className="containerCentralPagination">
-      <button data-prev type="button" onClick={decrease} className="button">
+      <button
+        data-prev
+        disabled={currentPage === 1}
+        type="button"
+        onClick={decrease}
+        className="button"
+      >
         ⬅️
       </button>
 
@@ -102,7 +88,11 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
         {1}
       </button>
 
-      {/* {!hideCentral && Build()} */}
+      {currentPage - 1 > 1 && currentPage !== count && (
+        <button data-pointsMinor type="button" className="button">
+          ...
+        </button>
+      )}
 
       {currentPage !== 1 && currentPage !== count && (
         <button
@@ -112,6 +102,12 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
           onClick={() => onChange(currentPage)}
         >
           {currentPage}
+        </button>
+      )}
+
+{currentPage + 1 < count  && currentPage !== 1 && (
+        <button data-pointsMajor type="button" className="button">
+          ...
         </button>
       )}
 
@@ -126,7 +122,12 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
         {count}
       </button>
 
-      <button type="button" onClick={increase} className="button">
+      <button
+        type="button"
+        disabled={currentPage === count}
+        onClick={increase}
+        className="button"
+      >
         ➡️
       </button>
     </div>
