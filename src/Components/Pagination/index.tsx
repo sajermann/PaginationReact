@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./index.css";
 
 type Props = {
@@ -8,45 +8,7 @@ type Props = {
 };
 
 export default function Pagination({ count, currentPage, onChange }: Props) {
-  const [buttons, setButtons] = useState<number[]>([]);
-  const [siblingCount, setSiblingCount] = useState(2);
-  const [minorInterval, setMinorInterval] = useState(false);
-  const [majorInterval, setMajorInterval] = useState(false);
-  const [hideCentral, setHideCentral] = useState(false);
-
-  function verifyInterval() {
-    //Se estiver na primeira pág ou na última, o botão central não precisa ser exibido
-    if (currentPage === 1 || currentPage === count) {
-      setHideCentral(true);
-    } else {
-      setHideCentral(false);
-    }
-
-    if (currentPage - 1 === 1) {
-      setHideCentral(false);
-    }
-
-    if (currentPage - 1 !== 1) {
-      setMinorInterval(true);
-    } else {
-      setMinorInterval(false);
-    }
-
-    if (currentPage === 1 || currentPage === count) {
-      setMinorInterval(false);
-    }
-
-    if (currentPage + 1 !== count) {
-      setMajorInterval(true);
-    } else {
-      setMajorInterval(false);
-    }
-  }
-
-  useEffect(() => {
-    verifyInterval();
-  }, [currentPage]);
-
+  const [siblingCount] = useState(1);
   function decrease() {
     if (currentPage === 1) return;
     onChange(currentPage - 1);
@@ -56,14 +18,6 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
     if (currentPage === count) return;
     onChange(currentPage + 1);
   }
-
-  useEffect(() => {
-    const buttonsTemp: number[] = [];
-    for (let i = 1; i <= count; i += 1) {
-      buttonsTemp.push(i);
-    }
-    setButtons([...buttonsTemp]);
-  }, [count]);
 
   function Build() {
     const buttons: JSX.Element[] = [];
@@ -156,7 +110,7 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
     */
       for (let i = 1; i <= siblingCount; i += 1) {
 
-        if (i <= count && i <= currentPage && currentPage + i !== count && currentPage + i < count ) {
+        if (i <= count && currentPage + i !== count && currentPage + i < count ) {
           buttons.push(
             <button
               data-BrothersMajor
@@ -173,10 +127,10 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
       }
       // #endregion
 
-
     // #region Points Major
     
-    if (currentPage + 1 < count - 2 && currentPage !== 1) {
+    // if (currentPage + 1 < count - 2 &&  currentPage + siblingCount < count) {
+    if (count - (currentPage + siblingCount) > 1) {
       buttons.push(
         <button data-pointsMajor type="button" className="button">
           ...
