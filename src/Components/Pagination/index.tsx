@@ -8,7 +8,7 @@ type Props = {
 };
 
 export default function Pagination({ count, currentPage, onChange }: Props) {
-  const [siblingCount] = useState(1);
+  const [siblingCount] = useState(2);
   function decrease() {
     if (currentPage === 1) return;
     onChange(currentPage - 1);
