@@ -3,7 +3,7 @@ import './App.css'
 import Pagination from './Components/Pagination'
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(6)
 
   function handlePage(data:number){
     setCurrentPage(data)
@@ -11,7 +11,7 @@ function App() {
 
   return (
     <div className="App">
-      <Pagination count={10} currentPage={currentPage} onChange={handlePage} />
+      <Pagination totalPages={60} siblingCount={2} currentPage={currentPage} onChange={handlePage} />
     </div>
   )
 }

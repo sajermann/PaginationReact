@@ -3,20 +3,25 @@ import "./index.css";
 //Teste
 
 type Props = {
-  count: number;
+  totalPages: number;
   currentPage: number;
+  siblingCount: number;
   onChange: (data: number) => void;
 };
 
-export default function Pagination({ count, currentPage, onChange }: Props) {
-  const [siblingCount] = useState(2);
+export default function Pagination({
+  totalPages,
+  currentPage,
+  onChange,
+  siblingCount,
+}: Props) {
   function decrease() {
     if (currentPage === 1) return;
     onChange(currentPage - 1);
   }
 
   function increase() {
-    if (currentPage === count) return;
+    if (currentPage === totalPages) return;
     onChange(currentPage + 1);
   }
 
@@ -24,7 +29,7 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
     const buttons: JSX.Element[] = [];
 
     // #region First Button
-
+    /* Botão de Retroceder uma página, esse botão sempre estará presente */
     buttons.push(
       <button
         data-prev
@@ -39,6 +44,7 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
     // #endregion
 
     // #region First Page Button
+    /* Botão da primeira página, esse botão sempre estará na tela */
     buttons.push(
       <button
         data-firstpage
@@ -54,7 +60,9 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
     // #endregion
 
     // #region Points Minor
-    // Parece estar funcionando
+    /* Botão de reticência esquerda, aparece apenas quando 
+      a página atual menos o número de irmãos do botão central é maior que 2
+    */
     if (currentPage - siblingCount > 2) {
       buttons.push(
         <button data-pointsMinor type="button" className="button">
@@ -65,9 +73,10 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
     // #endregion
 
     // #region Brothers Minor
-    /*
-      Adicionar os irmão menores
-      Parece estar funcionando    
+    /* Botões dos irmãos da esquerda, para que eles apareçam devemos
+      verificar se o botão em questão é maior ou igual a 1 e se o botão em
+      questão é menor que a página atual e a página atual menos o botão em 
+      questão é diferente de 1
     */
     for (let i = siblingCount; i > 0; i -= 1) {
       if (i >= 1 && i < currentPage && currentPage - i !== 1) {
@@ -88,8 +97,11 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
     // #endregion
 
     // #region Central
-  
-    if (currentPage !== 1 && currentPage !== count) {
+    /*
+      Botão central só deve aparecer se a página atual for diferente de 1 e 
+      a página atual for diferente da última página
+    */
+    if (currentPage !== 1 && currentPage !== totalPages) {
       buttons.push(
         <button
           data-centralButton
@@ -104,34 +116,38 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
     // #endregion
 
     // #region Brothers Major
-    /*
-      Adicionar os irmão maiores
-      Parece estar funcionando
-         
+    /* Botões dos irmãos da direita, para que eles apareçam devemos
+      verificar se o botão em questão é menor ou igual ao total de páginas 
+      e se a página atual mais o botão em questão é diferente do total de 
+      páginas e se a página atual mais o botão em quetão é menor que o total 
+      de páginas
     */
-      for (let i = 1; i <= siblingCount; i += 1) {
-
-        if (i <= count && currentPage + i !== count && currentPage + i < count ) {
-          buttons.push(
-            <button
-              data-BrothersMajor
-              type="button"
-              className={[currentPage + i === currentPage ? "selected" : "", "button"]
-                .toString()
-                .replace(",", " ")}
-              onClick={() => onChange(currentPage + i)}
-            >
-              {currentPage + i}
-            </button>
-          );
-        }
+    for (let i = 1; i <= siblingCount; i += 1) {
+      if (i <= totalPages && currentPage + i !== totalPages && currentPage + i < totalPages) {
+        buttons.push(
+          <button
+            data-BrothersMajor
+            type="button"
+            className={[
+              currentPage + i === currentPage ? "selected" : "",
+              "button",
+            ]
+              .toString()
+              .replace(",", " ")}
+            onClick={() => onChange(currentPage + i)}
+          >
+            {currentPage + i}
+          </button>
+        );
       }
-      // #endregion
+    }
+    // #endregion
 
     // #region Points Major
-    
-    // if (currentPage + 1 < count - 2 &&  currentPage + siblingCount < count) {
-    if (count - (currentPage + siblingCount) > 1) {
+    /* Botão de reticência direita, aparece apenas quando 
+      o total de páginas menos a página atual mais os irmãos são maiores que 1
+    */
+    if (totalPages - (currentPage + siblingCount) > 1) {
       buttons.push(
         <button data-pointsMajor type="button" className="button">
           ...
@@ -141,25 +157,27 @@ export default function Pagination({ count, currentPage, onChange }: Props) {
     // #endregion
 
     // #region Last Page Button
+    /* Botão da última página, esse botão sempre estará na tela */
     buttons.push(
       <button
         data-lastpage
         type="button"
-        className={[count === currentPage ? "selected" : "", "button"]
+        className={[totalPages === currentPage ? "selected" : "", "button"]
           .toString()
           .replace(",", " ")}
-        onClick={() => onChange(count)}
+        onClick={() => onChange(totalPages)}
       >
-        {count}
+        {totalPages}
       </button>
     );
     // #endregion
 
     // #region Last Button
+    /* Botão de Avançar uma página, esse botão sempre estará presente */
     buttons.push(
       <button
         type="button"
-        disabled={currentPage === count}
+        disabled={currentPage === totalPages}
         onClick={increase}
         className="button"
       >
