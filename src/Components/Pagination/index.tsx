@@ -25,8 +25,100 @@ export default function Pagination({
     onChange(currentPage + 1);
   }
 
+  function MountButton(data:number[]):JSX.Element[]{
+    const buttons: JSX.Element[] = [];
+    for(let i = 0; i < data.length; i+=1){
+      buttons.push(
+        <button
+        type="button"
+        className={[data[i] === currentPage ? "selected" : "", "button"]
+          .toString()
+          .replace(",", " ")}
+        onClick={() => onChange(data[i])}
+      >
+        {data[i]}
+      </button>
+      )
+    }
+    return buttons;
+  }
+
+  function siblingMinor(centralNumber: number):JSX.Element[]{
+    const numerosRettorno : number[] = []
+    const irmaos = 2
+    if(centralNumber - irmaos <= 1){
+      for (let i = 1; i <= irmaos; i+=1){
+      
+        numerosRettorno.push(i + 1)
+
+      }
+      return MountButton(numerosRettorno.sort())
+    }
+
+    for (let i = 1; i <= irmaos; i+=1){
+      if(centralNumber - i !== 1){
+        numerosRettorno.push(centralNumber - i)
+      }
+    }
+
+    return MountButton(numerosRettorno.sort())
+  }
+
+
   function Build() {
     const buttons: JSX.Element[] = [];
+    const botoesInicio: JSX.Element[] = [];
+    const botoesFim: JSX.Element[] = [];
+
+    botoesInicio[0] = (
+      <button
+        data-prev
+        disabled={currentPage === 1}
+        type="button"
+        onClick={decrease}
+        className="button"
+      >
+        ⬅️
+      </button>
+    );
+    botoesInicio[1] = (
+      <button
+        data-firstpage
+        type="button"
+        className={[1 === currentPage ? "selected" : "", "button"]
+          .toString()
+          .replace(",", " ")}
+        onClick={() => onChange(1)}
+      >
+        {1}
+      </button>
+    );
+
+    const t = siblingMinor(currentPage)
+
+    botoesFim[0] = (
+      <button
+        data-lastpage
+        type="button"
+        className={[totalPages === currentPage ? "selected" : "", "button"]
+          .toString()
+          .replace(",", " ")}
+        onClick={() => onChange(totalPages)}
+      >
+        {totalPages}
+      </button>
+    );
+
+    botoesFim[1] = (
+      <button
+        type="button"
+        disabled={currentPage === totalPages}
+        onClick={increase}
+        className="button"
+      >
+        ➡️
+      </button>
+    );
 
     // #region First Button
     /* Botão de Retroceder uma página, esse botão sempre estará presente */
@@ -123,7 +215,11 @@ export default function Pagination({
       de páginas
     */
     for (let i = 1; i <= siblingCount; i += 1) {
-      if (i <= totalPages && currentPage + i !== totalPages && currentPage + i < totalPages) {
+      if (
+        i <= totalPages &&
+        currentPage + i !== totalPages &&
+        currentPage + i < totalPages
+      ) {
         buttons.push(
           <button
             data-BrothersMajor
@@ -186,7 +282,7 @@ export default function Pagination({
     );
     // #endregion
 
-    return buttons;
+    return botoesInicio.concat(t).concat(botoesFim);
   }
 
   return <div className="containerCentralPagination">{Build()}</div>;
