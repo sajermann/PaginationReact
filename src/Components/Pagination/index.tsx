@@ -25,11 +25,12 @@ export default function Pagination({
     onChange(currentPage + 1);
   }
 
-  function MountButton(data:number[]):JSX.Element[]{
+  function MountButton(data:number[], type:string):JSX.Element[]{
     const buttons: JSX.Element[] = [];
     for(let i = 0; i < data.length; i+=1){
       buttons.push(
         <button
+        data-type={type}
         type="button"
         className={[data[i] === currentPage ? "selected" : "", "button"]
           .toString()
@@ -52,7 +53,8 @@ export default function Pagination({
         numerosRettorno.push(i + 1)
 
       }
-      return MountButton(numerosRettorno.sort())
+      console.log({minor: numerosRettorno.sort()})
+      return MountButton(numerosRettorno.sort(),"Minor")
     }
 
     for (let i = 1; i <= irmaos; i+=1){
@@ -60,8 +62,73 @@ export default function Pagination({
         numerosRettorno.push(centralNumber - i)
       }
     }
+    console.log({minor: numerosRettorno.sort()})
+    return MountButton(numerosRettorno.sort(),"Minor")
+  }
 
-    return MountButton(numerosRettorno.sort())
+  function siblingMajor(centralNumber: number){
+    const numerosRettorno : number[] = []
+    const irmaos = 2
+    if(centralNumber + irmaos >= totalPages){
+      for (let i = totalPages; i > totalPages - irmaos; i-=1){
+        // console.log('Caindo Aqui')
+        numerosRettorno.push(i - 1)
+
+      }
+      console.log({major: numerosRettorno.sort()})
+      return MountButton(numerosRettorno.sort(),"Major")
+    }
+
+    for (let i = 1; i <= irmaos; i+=1){
+      // console.log('Só pra ter certeza')
+      if(centralNumber + i !== totalPages){
+        numerosRettorno.push(centralNumber + i)
+      }
+    }
+    console.log({major: numerosRettorno.sort()})
+    return MountButton(numerosRettorno.sort(),"Major")
+  }
+
+  function locateCenterNumberToButton(){
+    if(currentPage === totalPages){
+      return MountButton([currentPage-siblingCount-1],'Center')
+    }
+    if(currentPage === 1){
+      return MountButton([currentPage+siblingCount+1],'Center')
+    }
+
+    if(currentPage-siblingCount > 1  && currentPage+siblingCount < totalPages){
+      return MountButton([currentPage],'Center')
+    }
+
+    if(currentPage-siblingCount <= 1){
+      return MountButton([currentPage + siblingCount],'Center')
+    }
+
+    return MountButton([currentPage],'Center')
+  }
+
+  function locateCenterNumber(){
+    //Quando vou para página 3 o centralNumber passa a 5, o que está errado, em dois irmãos o central number da página 3 é 4
+    if(currentPage === totalPages){
+      console.log({centerNumber:currentPage-siblingCount-1 })
+      return currentPage-siblingCount-1
+    }
+    if(currentPage === 1){
+      console.log({centerNumber:currentPage+siblingCount+1 })
+      return currentPage+siblingCount+1
+    }
+    if(currentPage-siblingCount > 1 && currentPage+siblingCount < totalPages){
+      console.log({centerNumber:currentPage })
+      return currentPage
+    }
+    
+    if(currentPage-siblingCount <= 1){
+      console.log({centerNumber:currentPage+siblingCount })
+      return currentPage + siblingCount
+    }
+
+    return currentPage
   }
 
 
@@ -93,8 +160,12 @@ export default function Pagination({
         {1}
       </button>
     );
+    console.log({currentPage})
+    const centerNumber = locateCenterNumber()
+    const centerNumberToButton = locateCenterNumberToButton()
 
-    const t = siblingMinor(currentPage)
+    const t = siblingMinor(centerNumber)
+    const tt = siblingMajor(centerNumber)
 
     botoesFim[0] = (
       <button
@@ -282,7 +353,7 @@ export default function Pagination({
     );
     // #endregion
 
-    return botoesInicio.concat(t).concat(botoesFim);
+    return botoesInicio.concat(t).concat(centerNumberToButton).concat(tt).concat(botoesFim);
   }
 
   return <div className="containerCentralPagination">{Build()}</div>;
