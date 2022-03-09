@@ -14,8 +14,7 @@ type contextProps = {
 	currentPage: number;
 	totalPages: number;
 	siblingCount: number;
-	//onChange: (data: number) => void;
-
+	// onChange: (data: number) => void;
 };
 
 const authContextDefaultValues: contextProps = {
@@ -44,12 +43,10 @@ export function ContextProvider({ children, darkMode, setDarkMode }: Props) {
 	const [totalPages, setTotalPages] = useState(1);
 	const [siblingCount, setSiblingCount] = useState(1);
 
-
-
 	const value = {
 		currentPage,
 		totalPages,
-		siblingCount
+		siblingCount,
 	};
 
 	return <Context.Provider value={value}>{children}</Context.Provider>;
