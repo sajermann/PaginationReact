@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./index.css";
 //Teste
 
@@ -15,6 +15,10 @@ export default function Pagination({
   onChange,
   siblingCount,
 }: Props) {
+  const [siblingCountInternal, setSiblingCountInternal] = useState(currentPage);
+  useEffect(()=>{
+    if(siblingCountInternal > totalPages)setSiblingCountInternal(0)
+  },[siblingCount, totalPages])
   function decrease() {
     if (currentPage === 1) return;
     onChange(currentPage - 1);
@@ -54,11 +58,11 @@ export default function Pagination({
 
   function siblingMinor(centralNumber: number): JSX.Element[] {
     const numerosRettorno: number[] = [];
-    if (centralNumber - siblingCount <= 1) {
-      for (let i = 1; i <= siblingCount + 1; i += 1) {
+    if (centralNumber - siblingCountInternal <= 1) {
+      for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
         numerosRettorno.push(i + 1);
       }
-      const sorted = numerosRettorno.sort();
+      const sorted = numerosRettorno.sort((a,b)=>a-b);
       if (sorted[0] - 1 > 1) {
         sorted[0] = -1;
       }
@@ -66,12 +70,12 @@ export default function Pagination({
       return MountButton(sorted, "Minor");
     }
 
-    for (let i = 1; i <= siblingCount + 1; i += 1) {
+    for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
       if (centralNumber - i !== 1) {
         numerosRettorno.push(centralNumber - i);
       }
     }
-    const sorted = numerosRettorno.sort();
+    const sorted = numerosRettorno.sort((a,b)=>a-b);
     if (sorted[0] - 1 > 1) {
       sorted[0] = -1;
     }
@@ -81,11 +85,11 @@ export default function Pagination({
 
   function siblingMajor(centralNumber: number) {
     const numerosRettorno: number[] = [];
-    if (centralNumber + siblingCount >= totalPages) {
-      for (let i = totalPages; i > totalPages - siblingCount + 1; i -= 1) {
+    if (centralNumber + siblingCountInternal >= totalPages) {
+      for (let i = totalPages; i > totalPages - siblingCountInternal + 1; i -= 1) {
         numerosRettorno.push(i - 1);
       }
-      const sorted = numerosRettorno.sort();
+      const sorted = numerosRettorno.sort((a,b)=>a-b);
       if (sorted[sorted.length - 1] + 1 < totalPages) {
         sorted[sorted.length - 1] = -1;
       }
@@ -93,13 +97,13 @@ export default function Pagination({
       return MountButton(sorted, "Major");
     }
 
-    for (let i = 1; i <= siblingCount + 1; i += 1) {
+    for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
       // console.log('Só pra ter certeza')
       if (centralNumber + i !== totalPages) {
         numerosRettorno.push(centralNumber + i);
       }
     }
-    const sorted = numerosRettorno.sort();
+    const sorted = numerosRettorno.sort((a,b)=>a-b);
     if (sorted[sorted.length - 1] + 1 < totalPages) {
       sorted[sorted.length - 1] = -1;
     }
@@ -109,33 +113,33 @@ export default function Pagination({
 
   function locateCenterNumberToButton() {
     if (currentPage === totalPages) {
-      return MountButton([currentPage - siblingCount - 1], "Center");
+      return MountButton([currentPage - siblingCountInternal - 1], "Center");
     }
     if (currentPage === 1) {
-      return MountButton([currentPage + siblingCount + 1], "Center");
+      return MountButton([currentPage + siblingCountInternal + 1], "Center");
     }
 
     if (
-      currentPage - siblingCount > 1 &&
-      currentPage + siblingCount < totalPages
+      currentPage - siblingCountInternal > 1 &&
+      currentPage + siblingCountInternal < totalPages
     ) {
       return MountButton([currentPage], "Center");
     }
 
-    if (currentPage - siblingCount < 1) {
-      return MountButton([currentPage + siblingCount], "Center");
+    if (currentPage - siblingCountInternal < 1) {
+      return MountButton([currentPage + siblingCountInternal], "Center");
     }
 
-    if (currentPage - siblingCount <= 1) {
-      return MountButton([currentPage + siblingCount - 1], "Center");
+    if (currentPage - siblingCountInternal <= 1) {
+      return MountButton([currentPage + siblingCountInternal - 1], "Center");
     }
 
-    if (currentPage + siblingCount > totalPages) {
-      return MountButton([currentPage - siblingCount], "Center");
+    if (currentPage + siblingCountInternal > totalPages) {
+      return MountButton([currentPage - siblingCountInternal], "Center");
     }
 
-    if (currentPage + siblingCount >= totalPages) {
-      return MountButton([currentPage - siblingCount + 1], "Center");
+    if (currentPage + siblingCountInternal >= totalPages) {
+      return MountButton([currentPage - siblingCountInternal + 1], "Center");
     }
 
     return MountButton([currentPage], "Center");
@@ -143,39 +147,39 @@ export default function Pagination({
 
   function locateCenterNumber() {
     if (currentPage === totalPages) {
-      console.log({ centerNumber: currentPage - siblingCount - 1 });
-      return currentPage - siblingCount - 1;
+      console.log({ centerNumber: currentPage - siblingCountInternal - 1 });
+      return currentPage - siblingCountInternal - 1;
     }
     if (currentPage === 1) {
-      console.log({ centerNumber: currentPage + siblingCount + 1 });
-      return currentPage + siblingCount + 1;
+      console.log({ centerNumber: currentPage + siblingCountInternal + 1 });
+      return currentPage + siblingCountInternal + 1;
     }
     if (
-      currentPage - siblingCount > 1 &&
-      currentPage + siblingCount < totalPages
+      currentPage - siblingCountInternal > 1 &&
+      currentPage + siblingCountInternal < totalPages
     ) {
       console.log({ centerNumber: currentPage });
       return currentPage;
     }
 
-    if (currentPage - siblingCount < 1) {
-      console.log({ centerNumber: currentPage + siblingCount });
-      return currentPage + siblingCount;
+    if (currentPage - siblingCountInternal < 1) {
+      console.log({ centerNumber: currentPage + siblingCountInternal });
+      return currentPage + siblingCountInternal;
     }
 
-    if (currentPage - siblingCount <= 1) {
-      console.log({ centerNumber: currentPage + siblingCount - 1 });
-      return currentPage + siblingCount - 1;
+    if (currentPage - siblingCountInternal <= 1) {
+      console.log({ centerNumber: currentPage + siblingCountInternal - 1 });
+      return currentPage + siblingCountInternal - 1;
     }
 
-    if (currentPage + siblingCount > totalPages) {
-      console.log({ centerNumber: currentPage - siblingCount });
-      return currentPage - siblingCount;
+    if (currentPage + siblingCountInternal > totalPages) {
+      console.log({ centerNumber: currentPage - siblingCountInternal });
+      return currentPage - siblingCountInternal;
     }
 
-    if (currentPage + siblingCount >= totalPages) {
-      console.log({ centerNumber: currentPage - siblingCount + 1 });
-      return currentPage - siblingCount + 1;
+    if (currentPage + siblingCountInternal >= totalPages) {
+      console.log({ centerNumber: currentPage - siblingCountInternal + 1 });
+      return currentPage - siblingCountInternal + 1;
     }
 
     return currentPage;
@@ -275,7 +279,7 @@ export default function Pagination({
     /* Botão de reticência esquerda, aparece apenas quando 
       a página atual menos o número de irmãos do botão central é maior que 2
     */
-    if (currentPage - siblingCount > 2) {
+    if (currentPage - siblingCountInternal > 2) {
       buttons.push(
         <button data-pointsMinor type="button" className="button">
           ...
@@ -290,7 +294,7 @@ export default function Pagination({
       questão é menor que a página atual e a página atual menos o botão em 
       questão é diferente de 1
     */
-    for (let i = siblingCount; i > 0; i -= 1) {
+    for (let i = siblingCountInternal; i > 0; i -= 1) {
       if (i >= 1 && i < currentPage && currentPage - i !== 1) {
         buttons.push(
           <button
@@ -334,7 +338,7 @@ export default function Pagination({
       páginas e se a página atual mais o botão em quetão é menor que o total 
       de páginas
     */
-    for (let i = 1; i <= siblingCount; i += 1) {
+    for (let i = 1; i <= siblingCountInternal; i += 1) {
       if (
         i <= totalPages &&
         currentPage + i !== totalPages &&
@@ -363,7 +367,7 @@ export default function Pagination({
     /* Botão de reticência direita, aparece apenas quando 
       o total de páginas menos a página atual mais os irmãos são maiores que 1
     */
-    if (totalPages - (currentPage + siblingCount) > 1) {
+    if (totalPages - (currentPage + siblingCountInternal) > 1) {
       buttons.push(
         <button data-pointsMajor type="button" className="button">
           ...
