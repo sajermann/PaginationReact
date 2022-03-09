@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import LocateCenterNumber from "../../Utils/LocateCenterNumber";
+import MountButton from "../../Utils/MountButton";
+import SiblingMajor from "../../Utils/SiblingMajor";
+import SiblingMinor from "../../Utils/SiblingMinor";
 import "./index.css";
 //Teste
 
@@ -29,165 +33,214 @@ export default function Pagination({
     onChange(currentPage + 1);
   }
 
-  function MountButton(data: number[], type: string): JSX.Element[] {
-    const buttons: JSX.Element[] = [];
-    for (let i = 0; i < data.length; i += 1) {
-      if (data[i] === -1) {
-        buttons.push(
-          <button data-type={type} type="button" className="button">
-            ...
-          </button>
-        );
-      } else {
-        buttons.push(
-          <button
-            data-type={type}
-            type="button"
-            className={[data[i] === currentPage ? "selected" : "", "button"]
-              .toString()
-              .replace(",", " ")}
-            onClick={() => onChange(data[i])}
-          >
-            {data[i]}
-          </button>
-        );
-      }
-    }
-    return buttons;
-  }
+  // function MountButton(data: number[], type: string): JSX.Element[] {
+  //   const buttons: JSX.Element[] = [];
+  //   for (let i = 0; i < data.length; i += 1) {
+  //     if (data[i] === -1) {
+  //       buttons.push(
+  //         <button data-type={type} type="button" className="button">
+  //           ...
+  //         </button>
+  //       );
+  //     } else {
+  //       buttons.push(
+  //         <button
+  //           data-type={type}
+  //           type="button"
+  //           className={[data[i] === currentPage ? "selected" : "", "button"]
+  //             .toString()
+  //             .replace(",", " ")}
+  //           onClick={() => onChange(data[i])}
+  //         >
+  //           {data[i]}
+  //         </button>
+  //       );
+  //     }
+  //   }
+  //   return buttons;
+  // }
 
-  function siblingMinor(centralNumber: number): JSX.Element[] {
-    const numerosRettorno: number[] = [];
-    if (centralNumber - siblingCountInternal <= 1) {
-      for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
-        numerosRettorno.push(i + 1);
-      }
-      const sorted = numerosRettorno.sort((a, b) => a - b);
-      if (sorted[0] - 1 > 1) {
-        sorted[0] = -1;
-      }
-      console.log({ minor: sorted });
-      return MountButton(sorted, "Minor");
-    }
+  // function siblingMinor(centralNumber: number): JSX.Element[] {
+  //   const numerosRettorno: number[] = [];
+  //   if (centralNumber - siblingCountInternal <= 1) {
+  //     for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
+  //       numerosRettorno.push(i + 1);
+  //     }
+  //     const sorted = numerosRettorno.sort((a, b) => a - b);
+  //     if (sorted[0] - 1 > 1) {
+  //       sorted[0] = -1;
+  //     }
+  //     console.log({ minor: sorted });
+  //     return MountButton({
+  //       data: sorted,
+  //       type: "Minor",
+  //       currentPage,
+  //       onChange,
+  //     });
+  //   }
 
-    for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
-      if (centralNumber - i !== 1) {
-        numerosRettorno.push(centralNumber - i);
-      }
-    }
-    const sorted = numerosRettorno.sort((a, b) => a - b);
-    if (sorted[0] - 1 > 1) {
-      sorted[0] = -1;
-    }
-    console.log({ minor: sorted });
-    return MountButton(sorted, "Minor");
-  }
+  //   for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
+  //     if (centralNumber - i !== 1) {
+  //       numerosRettorno.push(centralNumber - i);
+  //     }
+  //   }
+  //   const sorted = numerosRettorno.sort((a, b) => a - b);
+  //   if (sorted[0] - 1 > 1) {
+  //     sorted[0] = -1;
+  //   }
+  //   console.log({ minor: sorted });
+  //   return MountButton({ data: sorted, type: "Minor", currentPage, onChange });
+  // }
 
-  function siblingMajor(centralNumber: number) {
-    const numerosRettorno: number[] = [];
-    if (centralNumber + siblingCountInternal >= totalPages) {
-      for (
-        let i = totalPages;
-        i > totalPages - siblingCountInternal + 1;
-        i -= 1
-      ) {
-        numerosRettorno.push(i - 1);
-      }
-      const sorted = numerosRettorno.sort((a, b) => a - b);
-      if (sorted[sorted.length - 1] + 1 < totalPages) {
-        sorted[sorted.length - 1] = -1;
-      }
-      console.log({ major: sorted });
-      return MountButton(sorted, "Major");
-    }
+  // function siblingMajor(centralNumber: number) {
+  //   const numerosRettorno: number[] = [];
+  //   if (centralNumber + siblingCountInternal >= totalPages) {
+  //     for (
+  //       let i = totalPages;
+  //       i > totalPages - siblingCountInternal + 1;
+  //       i -= 1
+  //     ) {
+  //       numerosRettorno.push(i - 1);
+  //     }
+  //     const sorted = numerosRettorno.sort((a, b) => a - b);
+  //     if (sorted[sorted.length - 1] + 1 < totalPages) {
+  //       sorted[sorted.length - 1] = -1;
+  //     }
+  //     console.log({ major: sorted });
+  //     return MountButton({
+  //       data: sorted,
+  //       type: "Major",
+  //       currentPage,
+  //       onChange,
+  //     });
+  //   }
 
-    for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
-      // console.log('Só pra ter certeza')
-      if (centralNumber + i !== totalPages) {
-        numerosRettorno.push(centralNumber + i);
-      }
-    }
-    const sorted = numerosRettorno.sort((a, b) => a - b);
-    if (sorted[sorted.length - 1] + 1 < totalPages) {
-      sorted[sorted.length - 1] = -1;
-    }
-    console.log({ major: sorted });
-    return MountButton(sorted, "Major");
-  }
+  //   for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
+  //     if (centralNumber + i !== totalPages) {
+  //       numerosRettorno.push(centralNumber + i);
+  //     }
+  //   }
+  //   const sorted = numerosRettorno.sort((a, b) => a - b);
+  //   if (sorted[sorted.length - 1] + 1 < totalPages) {
+  //     sorted[sorted.length - 1] = -1;
+  //   }
+  //   console.log({ major: sorted });
+  //   return MountButton({ data: sorted, type: "Major", currentPage, onChange });
+  // }
 
   function locateCenterNumberToButton() {
     if (currentPage === totalPages) {
-      return MountButton([currentPage - siblingCountInternal - 1], "Center");
+      return MountButton({
+        data: [currentPage - siblingCountInternal - 1],
+        type: "Center",
+        currentPage,
+        onChange,
+      });
     }
     if (currentPage === 1) {
-      return MountButton([currentPage + siblingCountInternal + 1], "Center");
+      return MountButton({
+        data: [currentPage + siblingCountInternal + 1],
+        type: "Center",
+        currentPage,
+        onChange,
+      });
     }
 
     if (
       currentPage - siblingCountInternal > 1 &&
       currentPage + siblingCountInternal < totalPages
     ) {
-      return MountButton([currentPage], "Center");
+      return MountButton({
+        data: [currentPage],
+        type: "Center",
+        currentPage,
+        onChange,
+      });
     }
 
     if (currentPage - siblingCountInternal < 1) {
-      return MountButton([currentPage + siblingCountInternal], "Center");
+      return MountButton({
+        data: [currentPage + siblingCountInternal],
+        type: "Center",
+        currentPage,
+        onChange,
+      });
     }
 
     if (currentPage - siblingCountInternal <= 1) {
-      return MountButton([currentPage + siblingCountInternal - 1], "Center");
+      return MountButton({
+        data: [currentPage + siblingCountInternal - 1],
+        type: "Center",
+        currentPage,
+        onChange,
+      });
     }
 
     if (currentPage + siblingCountInternal > totalPages) {
-      return MountButton([currentPage - siblingCountInternal], "Center");
+      return MountButton({
+        data: [currentPage - siblingCountInternal],
+        type: "Center",
+        currentPage,
+        onChange,
+      });
     }
 
     if (currentPage + siblingCountInternal >= totalPages) {
-      return MountButton([currentPage - siblingCountInternal + 1], "Center");
+      return MountButton({
+        data: [currentPage - siblingCountInternal + 1],
+        type: "Center",
+        currentPage,
+        onChange,
+      });
     }
 
-    return MountButton([currentPage], "Center");
+    return MountButton({
+      data: [currentPage],
+      type: "Center",
+      currentPage,
+      onChange,
+    });
   }
 
-  function locateCenterNumber() {
-    if (currentPage === totalPages) {
-      console.log({ centerNumber: currentPage - siblingCountInternal - 1 });
-      return currentPage - siblingCountInternal - 1;
-    }
-    if (currentPage === 1) {
-      console.log({ centerNumber: currentPage + siblingCountInternal + 1 });
-      return currentPage + siblingCountInternal + 1;
-    }
-    if (
-      currentPage - siblingCountInternal > 1 &&
-      currentPage + siblingCountInternal < totalPages
-    ) {
-      console.log({ centerNumber: currentPage });
-      return currentPage;
-    }
+  // function locateCenterNumber() {
+  //   if (currentPage === totalPages) {
+  //     console.log({ centerNumber: currentPage - siblingCountInternal - 1 });
+  //     return currentPage - siblingCountInternal - 1;
+  //   }
+  //   if (currentPage === 1) {
+  //     console.log({ centerNumber: currentPage + siblingCountInternal + 1 });
+  //     return currentPage + siblingCountInternal + 1;
+  //   }
+  //   if (
+  //     currentPage - siblingCountInternal > 1 &&
+  //     currentPage + siblingCountInternal < totalPages
+  //   ) {
+  //     console.log({ centerNumber: currentPage });
+  //     return currentPage;
+  //   }
 
-    if (currentPage - siblingCountInternal < 1) {
-      console.log({ centerNumber: currentPage + siblingCountInternal });
-      return currentPage + siblingCountInternal;
-    }
+  //   if (currentPage - siblingCountInternal < 1) {
+  //     console.log({ centerNumber: currentPage + siblingCountInternal });
+  //     return currentPage + siblingCountInternal;
+  //   }
 
-    if (currentPage - siblingCountInternal <= 1) {
-      console.log({ centerNumber: currentPage + siblingCountInternal - 1 });
-      return currentPage + siblingCountInternal - 1;
-    }
+  //   if (currentPage - siblingCountInternal <= 1) {
+  //     console.log({ centerNumber: currentPage + siblingCountInternal - 1 });
+  //     return currentPage + siblingCountInternal - 1;
+  //   }
 
-    if (currentPage + siblingCountInternal > totalPages) {
-      console.log({ centerNumber: currentPage - siblingCountInternal });
-      return currentPage - siblingCountInternal;
-    }
+  //   if (currentPage + siblingCountInternal > totalPages) {
+  //     console.log({ centerNumber: currentPage - siblingCountInternal });
+  //     return currentPage - siblingCountInternal;
+  //   }
 
-    if (currentPage + siblingCountInternal >= totalPages) {
-      console.log({ centerNumber: currentPage - siblingCountInternal + 1 });
-      return currentPage - siblingCountInternal + 1;
-    }
+  //   if (currentPage + siblingCountInternal >= totalPages) {
+  //     console.log({ centerNumber: currentPage - siblingCountInternal + 1 });
+  //     return currentPage - siblingCountInternal + 1;
+  //   }
 
-    return currentPage;
-  }
+  //   return currentPage;
+  // }
 
   function Build() {
     const buttons: JSX.Element[] = [];
@@ -218,11 +271,26 @@ export default function Pagination({
       </button>
     );
     console.log({ currentPage });
-    const centerNumber = locateCenterNumber();
+    const centralNumber = LocateCenterNumber({
+      currentPage,
+      siblingCount: siblingCountInternal,
+      totalPages,
+    });
     const centerNumberToButton = locateCenterNumberToButton();
 
-    const t = siblingMinor(centerNumber);
-    const tt = siblingMajor(centerNumber);
+    const t = SiblingMinor({
+      centralNumber,
+      currentPage,
+      onChange,
+      siblingCount: siblingCountInternal,
+    });
+    const tt = SiblingMajor({
+      centralNumber,
+      currentPage,
+      onChange,
+      siblingCount: siblingCountInternal,
+      totalPages,
+    });
 
     botoesFim[0] = (
       <button
@@ -421,9 +489,11 @@ export default function Pagination({
     <>
       <div className="containerCentralPagination">{Build()}</div>
       <h1>Current Page: {currentPage}</h1>
-      <h1>Central Number: {locateCenterNumber()}</h1>
-      <h1>Minor: {siblingMinor(locateCenterNumber())}</h1>
-      <h1>Major: {siblingMajor(locateCenterNumber())}</h1>
+      <h1>Central Number: {LocateCenterNumber({currentPage, siblingCount, totalPages})}</h1>
+      <h1>Total Pages: {totalPages}</h1>
+      <h1>Sibling: {siblingCount}</h1>
+      <h1>Minor: {SiblingMinor({centralNumber: LocateCenterNumber({currentPage, siblingCount, totalPages}), currentPage, onChange, siblingCount: siblingCountInternal})}</h1>
+      <h1>Major: {SiblingMajor({centralNumber: LocateCenterNumber({currentPage, siblingCount, totalPages}), currentPage, onChange, siblingCount: siblingCountInternal, totalPages})}</h1>
     </>
   );
 }
