@@ -11,7 +11,7 @@ function App() {
 
   return (
     <div className="App">
-      <Pagination totalPages={2} siblingCount={5} currentPage={currentPage} onChange={handlePage} />
+      <Pagination totalPage={6} siblingCount={2} currentPage={currentPage} onChange={handlePage} />
     </div>
   )
 }
