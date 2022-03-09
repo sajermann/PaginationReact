@@ -3,13 +3,13 @@ import "./index.css";
 //Teste
 
 type Props = {
-  totalPage: number;
+  totalPages: number;
   currentPage: number;
   onChange: (data: number) => void;
   siblingCount:number
 };
 
-export default function Pagination({ totalPage, currentPage, onChange, siblingCount }: Props) {
+export default function Pagination({ totalPages, currentPage, onChange, siblingCount }: Props) {
 
   function decrease() {
     if (currentPage === 1) return;
@@ -17,7 +17,7 @@ export default function Pagination({ totalPage, currentPage, onChange, siblingCo
   }
 
   function increase() {
-    if (currentPage === totalPage) return;
+    if (currentPage === totalPages) return;
     onChange(currentPage + 1);
   }
 
@@ -90,7 +90,7 @@ export default function Pagination({ totalPage, currentPage, onChange, siblingCo
 
     // #region Central
   
-    if (currentPage !== 1 && currentPage !== totalPage) {
+    if (currentPage !== 1 && currentPage !== totalPages) {
       buttons.push(
         <button
           data-centralButton
@@ -112,7 +112,7 @@ export default function Pagination({ totalPage, currentPage, onChange, siblingCo
     */
       for (let i = 1; i <= siblingCount; i += 1) {
 
-        if (i <= totalPage && currentPage + i !== totalPage && currentPage + i < totalPage ) {
+        if (i <= totalPages && currentPage + i !== totalPages && currentPage + i < totalPages ) {
           buttons.push(
             <button
               data-BrothersMajor
@@ -131,8 +131,8 @@ export default function Pagination({ totalPage, currentPage, onChange, siblingCo
 
     // #region Points Major
     
-    // if (currentPage + 1 < totalPage - 2 &&  currentPage + siblingCount < totalPage) {
-    if (totalPage - (currentPage + siblingCount) > 1) {
+    // if (currentPage + 1 < totalPages - 2 &&  currentPage + siblingCount < totalPages) {
+    if (totalPages - (currentPage + siblingCount) > 1) {
       buttons.push(
         <button data-pointsMajor type="button" className="button">
           ...
@@ -146,12 +146,12 @@ export default function Pagination({ totalPage, currentPage, onChange, siblingCo
       <button
         data-lastpage
         type="button"
-        className={[totalPage === currentPage ? "selected" : "", "button"]
+        className={[totalPages === currentPage ? "selected" : "", "button"]
           .toString()
           .replace(",", " ")}
-        onClick={() => onChange(totalPage)}
+        onClick={() => onChange(totalPages)}
       >
-        {totalPage}
+        {totalPages}
       </button>
     );
     // #endregion
@@ -160,7 +160,7 @@ export default function Pagination({ totalPage, currentPage, onChange, siblingCo
     buttons.push(
       <button
         type="button"
-        disabled={currentPage === totalPage}
+        disabled={currentPage === totalPages}
         onClick={increase}
         className="button"
       >
