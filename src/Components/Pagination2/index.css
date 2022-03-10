@@ -24,3 +24,56 @@
 }
 
 
+.containerInfos{
+	width: 900px;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.block{
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+	gap: 30px;
+	border: 1px solid;
+	padding: 5px;
+}
+
+.blockPagination{
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid;
+	padding: 5px;
+}
+
+.category, .descriptionNumber, .demoButton{
+	display: flex;
+	width: 33.33%;
+
+}
+
+.tableContainer{
+	width: 100%;
+}
+table, th, td{
+	border: 1px solid black;
+  border-collapse: collapse;
+}
+th{
+	height: 100px;
+	transform: rotate(-45deg);
+
+  /* Firefox */
+  -moz-transform: rotate(-45deg);
+
+  /* IE */
+  -ms-transform: rotate(-45deg);
+
+  /* Opera */
+  -o-transform: rotate(-45deg);
+}

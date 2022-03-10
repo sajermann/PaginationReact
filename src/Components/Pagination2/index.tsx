@@ -3,7 +3,9 @@ import LocateCenterNumber from '../../Utils/LocateCenterNumber';
 import MountButton from '../../Utils/MountButton';
 import SiblingMajor from '../../Utils/SiblingMajor';
 import SiblingMinor from '../../Utils/SiblingMinor';
+import { useMyContext } from '../../Context';
 import './index.css';
+import MountArrowButton from '../../Utils/MountArrowButton';
 // Teste
 
 type Props = {
@@ -13,194 +15,143 @@ type Props = {
 	onChange: (data: number) => void;
 };
 
-export default function Pagination({
+export default function Pagination2({
 	totalPages,
 	currentPage,
 	onChange,
 	siblingCount,
 }: Props) {
-	const [siblingCountInternal, setSiblingCountInternal] = useState(currentPage);
+	const {
+		currentPageInternal,
+		setCurrentPageInternal,
+		totalPagesInternal,
+		setTotalPagesInternal,
+		siblingCountInternal,
+		setSiblingCountInternal,
+		siblingMinorInternal,
+		setSiblingMinorInternal,
+		siblingMajorInternal,
+		setSiblingMajorInternal,
+		centralNumberInternal,
+		setCentralNumberInternal,
+	} = useMyContext();
+	useEffect(() => setCurrentPageInternal(currentPage), [currentPage]);
+	useEffect(() => setTotalPagesInternal(totalPages), [totalPages]);
+	useEffect(() => setSiblingCountInternal(siblingCount), [siblingCount]);
+	useEffect(() => setSiblingCountInternal(siblingCount), [siblingCount]);
+
+	useEffect(() => {
+		setCentralNumberInternal(
+			LocateCenterNumber({ currentPage, siblingCount, totalPages })
+		);
+	}, [currentPageInternal, siblingCountInternal, totalPagesInternal]);
+
+	useEffect(() => {
+		setSiblingMinorInternal(
+			SiblingMinor({
+				centralNumber: centralNumberInternal,
+				siblingCount: siblingCountInternal,
+			})
+		);
+	}, [centralNumberInternal, siblingCountInternal]);
+
+	useEffect(() => {
+		setSiblingMajorInternal(
+			SiblingMajor({
+				centralNumber: centralNumberInternal,
+				siblingCount: siblingCountInternal,
+				totalPages: totalPagesInternal,
+			})
+		);
+	}, [centralNumberInternal, siblingCountInternal, totalPagesInternal]);
+
 	useEffect(() => {
 		if (siblingCountInternal > totalPages) setSiblingCountInternal(0);
 	}, [siblingCount, totalPages]);
+
 	function decrease() {
-		if (currentPage === 1) return;
-		onChange(currentPage - 1);
+		if (currentPageInternal === 1) return;
+		onChange(currentPageInternal - 1);
 	}
 
 	function increase() {
-		if (currentPage === totalPages) return;
-		onChange(currentPage + 1);
+		if (currentPageInternal === totalPagesInternal) return;
+		onChange(currentPageInternal + 1);
 	}
 
-	// function MountButton(data: number[], type: string): JSX.Element[] {
-	//   const buttons: JSX.Element[] = [];
-	//   for (let i = 0; i < data.length; i += 1) {
-	//     if (data[i] === -1) {
-	//       buttons.push(
-	//         <button data-type={type} type="button" className="button">
-	//           ...
-	//         </button>
-	//       );
-	//     } else {
-	//       buttons.push(
-	//         <button
-	//           data-type={type}
-	//           type="button"
-	//           className={[data[i] === currentPage ? "selected" : "", "button"]
-	//             .toString()
-	//             .replace(",", " ")}
-	//           onClick={() => onChange(data[i])}
-	//         >
-	//           {data[i]}
-	//         </button>
-	//       );
-	//     }
-	//   }
-	//   return buttons;
+	// function locateCenterNumberToButton() {
+	// 	if (currentPage === totalPages) {
+	// 		return MountButton({
+	// 			data: [currentPage - siblingCountInternal - 1],
+	// 			type: 'Center',
+	// 			currentPage,
+	// 			onChange,
+	// 		});
+	// 	}
+	// 	if (currentPage === 1) {
+	// 		return MountButton({
+	// 			data: [currentPage + siblingCountInternal + 1],
+	// 			type: 'Center',
+	// 			currentPage,
+	// 			onChange,
+	// 		});
+	// 	}
+
+	// 	if (
+	// 		currentPage - siblingCountInternal > 1 &&
+	// 		currentPage + siblingCountInternal < totalPages
+	// 	) {
+	// 		return MountButton({
+	// 			data: [currentPage],
+	// 			type: 'Center',
+	// 			currentPage,
+	// 			onChange,
+	// 		});
+	// 	}
+
+	// 	if (currentPage - siblingCountInternal < 1) {
+	// 		return MountButton({
+	// 			data: [currentPage + siblingCountInternal],
+	// 			type: 'Center',
+	// 			currentPage,
+	// 			onChange,
+	// 		});
+	// 	}
+
+	// 	if (currentPage - siblingCountInternal <= 1) {
+	// 		return MountButton({
+	// 			data: [currentPage + siblingCountInternal - 1],
+	// 			type: 'Center',
+	// 			currentPage,
+	// 			onChange,
+	// 		});
+	// 	}
+
+	// 	if (currentPage + siblingCountInternal > totalPages) {
+	// 		return MountButton({
+	// 			data: [currentPage - siblingCountInternal],
+	// 			type: 'Center',
+	// 			currentPage,
+	// 			onChange,
+	// 		});
+	// 	}
+
+	// 	if (currentPage + siblingCountInternal >= totalPages) {
+	// 		return MountButton({
+	// 			data: [currentPage - siblingCountInternal + 1],
+	// 			type: 'Center',
+	// 			currentPage,
+	// 			onChange,
+	// 		});
+	// 	}
+
+	// 	return MountButton({
+	// 		data: [currentPage],
+	// 		type: 'Center',
+	// 		currentPage,
+	// 		onChange,
+	// 	});
 	// }
-
-	// function siblingMinor(centralNumber: number): JSX.Element[] {
-	//   const numerosRettorno: number[] = [];
-	//   if (centralNumber - siblingCountInternal <= 1) {
-	//     for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
-	//       numerosRettorno.push(i + 1);
-	//     }
-	//     const sorted = numerosRettorno.sort((a, b) => a - b);
-	//     if (sorted[0] - 1 > 1) {
-	//       sorted[0] = -1;
-	//     }
-	//     console.log({ minor: sorted });
-	//     return MountButton({
-	//       data: sorted,
-	//       type: "Minor",
-	//       currentPage,
-	//       onChange,
-	//     });
-	//   }
-
-	//   for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
-	//     if (centralNumber - i !== 1) {
-	//       numerosRettorno.push(centralNumber - i);
-	//     }
-	//   }
-	//   const sorted = numerosRettorno.sort((a, b) => a - b);
-	//   if (sorted[0] - 1 > 1) {
-	//     sorted[0] = -1;
-	//   }
-	//   console.log({ minor: sorted });
-	//   return MountButton({ data: sorted, type: "Minor", currentPage, onChange });
-	// }
-
-	// function siblingMajor(centralNumber: number) {
-	//   const numerosRettorno: number[] = [];
-	//   if (centralNumber + siblingCountInternal >= totalPages) {
-	//     for (
-	//       let i = totalPages;
-	//       i > totalPages - siblingCountInternal + 1;
-	//       i -= 1
-	//     ) {
-	//       numerosRettorno.push(i - 1);
-	//     }
-	//     const sorted = numerosRettorno.sort((a, b) => a - b);
-	//     if (sorted[sorted.length - 1] + 1 < totalPages) {
-	//       sorted[sorted.length - 1] = -1;
-	//     }
-	//     console.log({ major: sorted });
-	//     return MountButton({
-	//       data: sorted,
-	//       type: "Major",
-	//       currentPage,
-	//       onChange,
-	//     });
-	//   }
-
-	//   for (let i = 1; i <= siblingCountInternal + 1; i += 1) {
-	//     if (centralNumber + i !== totalPages) {
-	//       numerosRettorno.push(centralNumber + i);
-	//     }
-	//   }
-	//   const sorted = numerosRettorno.sort((a, b) => a - b);
-	//   if (sorted[sorted.length - 1] + 1 < totalPages) {
-	//     sorted[sorted.length - 1] = -1;
-	//   }
-	//   console.log({ major: sorted });
-	//   return MountButton({ data: sorted, type: "Major", currentPage, onChange });
-	// }
-
-	function locateCenterNumberToButton() {
-		if (currentPage === totalPages) {
-			return MountButton({
-				data: [currentPage - siblingCountInternal - 1],
-				type: 'Center',
-				currentPage,
-				onChange,
-			});
-		}
-		if (currentPage === 1) {
-			return MountButton({
-				data: [currentPage + siblingCountInternal + 1],
-				type: 'Center',
-				currentPage,
-				onChange,
-			});
-		}
-
-		if (
-			currentPage - siblingCountInternal > 1 &&
-			currentPage + siblingCountInternal < totalPages
-		) {
-			return MountButton({
-				data: [currentPage],
-				type: 'Center',
-				currentPage,
-				onChange,
-			});
-		}
-
-		if (currentPage - siblingCountInternal < 1) {
-			return MountButton({
-				data: [currentPage + siblingCountInternal],
-				type: 'Center',
-				currentPage,
-				onChange,
-			});
-		}
-
-		if (currentPage - siblingCountInternal <= 1) {
-			return MountButton({
-				data: [currentPage + siblingCountInternal - 1],
-				type: 'Center',
-				currentPage,
-				onChange,
-			});
-		}
-
-		if (currentPage + siblingCountInternal > totalPages) {
-			return MountButton({
-				data: [currentPage - siblingCountInternal],
-				type: 'Center',
-				currentPage,
-				onChange,
-			});
-		}
-
-		if (currentPage + siblingCountInternal >= totalPages) {
-			return MountButton({
-				data: [currentPage - siblingCountInternal + 1],
-				type: 'Center',
-				currentPage,
-				onChange,
-			});
-		}
-
-		return MountButton({
-			data: [currentPage],
-			type: 'Center',
-			currentPage,
-			onChange,
-		});
-	}
 
 	// function locateCenterNumber() {
 	//   if (currentPage === totalPages) {
@@ -270,27 +221,6 @@ export default function Pagination({
 				{1}
 			</button>
 		);
-		console.log({ currentPage });
-		const centralNumber = LocateCenterNumber({
-			currentPage,
-			siblingCount: siblingCountInternal,
-			totalPages,
-		});
-		const centerNumberToButton = locateCenterNumberToButton();
-
-		const t = SiblingMinor({
-			centralNumber,
-			currentPage,
-			onChange,
-			siblingCount: siblingCountInternal,
-		});
-		const tt = SiblingMajor({
-			centralNumber,
-			currentPage,
-			onChange,
-			siblingCount: siblingCountInternal,
-			totalPages,
-		});
 
 		botoesFim[0] = (
 			<button
@@ -394,7 +324,7 @@ export default function Pagination({
 				<button
 					data-centralButton
 					type="button"
-					className={currentPage === currentPage ? 'selected' : ''}
+					className="selected"
 					onClick={() => onChange(currentPage)}
 				>
 					{currentPage}
@@ -478,50 +408,243 @@ export default function Pagination({
 		);
 		// #endregion
 
-		return botoesInicio
-			.concat(t)
-			.concat(centerNumberToButton)
-			.concat(tt)
-			.concat(botoesFim);
+		return (
+			botoesInicio
+				// .concat(t)
+				// .concat(centralNumberInternal)
+				// .concat(tt)
+				.concat(botoesFim)
+		);
 	}
 
 	return (
-		<>
-			<div className="containerCentralPagination">{Build()}</div>
-			<h1>Current Page: {currentPage}</h1>
-			<h1>
-				Central Number:{' '}
-				{LocateCenterNumber({ currentPage, siblingCount, totalPages })}
-			</h1>
-			<h1>Total Pages: {totalPages}</h1>
-			<h1>Sibling: {siblingCount}</h1>
-			<h1>
-				Minor:{' '}
-				{SiblingMinor({
-					centralNumber: LocateCenterNumber({
-						currentPage,
-						siblingCount,
-						totalPages,
-					}),
-					currentPage,
-					onChange,
-					siblingCount: siblingCountInternal,
-				})}
-			</h1>
-			<h1>
-				Major:{' '}
-				{SiblingMajor({
-					centralNumber: LocateCenterNumber({
-						currentPage,
-						siblingCount,
-						totalPages,
-					}),
-					currentPage,
-					onChange,
-					siblingCount: siblingCountInternal,
-					totalPages,
-				})}
-			</h1>
-		</>
+		<div className="containerInfos">
+			<table className="tableContainer">
+				<thead>
+					<th>Prev</th>
+					<th>First Page</th>
+					<th>Siblings Minor</th>
+					<th>Central Number</th>
+					<th>Siblings Major</th>
+					<th>Last Page</th>
+				</thead>
+			</table>
+			<div className="blockPagination">
+				<MountArrowButton
+					onClick={decrease}
+					icon="⬅️"
+					disabled={currentPage === 1}
+				/>
+
+				<MountButton
+					data={[1]}
+					type="FirstPage"
+					currentPage={currentPageInternal}
+					onChange={onChange}
+				/>
+				<MountButton
+					data={siblingMinorInternal}
+					type="Minor"
+					currentPage={currentPageInternal}
+					onChange={onChange}
+				/>
+				<MountButton
+					data={[LocateCenterNumber({ currentPage, siblingCount, totalPages })]}
+					type="CentralNumber"
+					currentPage={currentPageInternal}
+					onChange={onChange}
+				/>
+				<MountButton
+					data={siblingMajorInternal}
+					type="Major"
+					currentPage={currentPageInternal}
+					onChange={onChange}
+				/>
+				<MountButton
+					data={[totalPagesInternal]}
+					type="LastPage"
+					currentPage={currentPageInternal}
+					onChange={onChange}
+				/>
+
+				<MountArrowButton
+					onClick={increase}
+					icon="➡️"
+					disabled={currentPage === totalPages}
+				/>
+			</div>
+
+			<div className="block">
+				<div className="category">
+					<h1>Current Page</h1>
+				</div>
+				<div className="descriptionNumber">
+					<h2>{currentPageInternal}</h2>
+				</div>
+				<div className="demoButton">
+					<h3>
+						<MountButton
+							data={[currentPageInternal]}
+							type=""
+							currentPage={currentPageInternal}
+							onChange={onChange}
+						/>
+					</h3>
+				</div>
+			</div>
+
+			<div className="block">
+				<div className="category">
+					<h1>Central Number</h1>
+				</div>
+				<div className="descriptionNumber">
+					<h2>
+						{LocateCenterNumber({ currentPage, siblingCount, totalPages })}
+					</h2>
+				</div>
+				<div className="demoButton">
+					<h3>
+						<MountButton
+							data={[
+								LocateCenterNumber({ currentPage, siblingCount, totalPages }),
+							]}
+							type="CentralNumber"
+							currentPage={currentPageInternal}
+							onChange={onChange}
+						/>
+					</h3>
+				</div>
+			</div>
+
+			<div className="block">
+				<div className="category">
+					<h1>Total Pages</h1>
+				</div>
+				<div className="descriptionNumber">
+					<h2>{totalPagesInternal}</h2>
+				</div>
+				<div className="demoButton"> </div>
+			</div>
+
+			<div className="block">
+				<div className="category">
+					<h1>Siblings</h1>
+				</div>
+				<div className="descriptionNumber">
+					<h2>{siblingCountInternal}</h2>
+				</div>
+				<div className="demoButton"> </div>
+			</div>
+
+			<div className="block">
+				<div className="category">
+					<h1>Sibling Minor</h1>
+				</div>
+				<div className="descriptionNumber">
+					<h2>[{siblingMinorInternal.join(', ')}]</h2>
+				</div>
+				<div className="demoButton">
+					<h3>
+						<MountButton
+							data={siblingMinorInternal}
+							type="Minor"
+							currentPage={currentPageInternal}
+							onChange={onChange}
+						/>
+					</h3>
+				</div>
+			</div>
+
+			<div className="block">
+				<div className="category">
+					<h1>Sibling Major</h1>
+				</div>
+				<div className="descriptionNumber">
+					<h2>[{siblingMajorInternal.join(', ')}]</h2>
+				</div>
+				<div className="demoButton">
+					<h3>
+						<MountButton
+							data={siblingMajorInternal}
+							type="Major"
+							currentPage={currentPageInternal}
+							onChange={onChange}
+						/>
+					</h3>
+				</div>
+			</div>
+
+			<div className="block">
+				<div className="category">
+					<h1>Next</h1>
+				</div>
+				<div className="descriptionNumber">
+					<h2>➡️</h2>
+				</div>
+				<div className="demoButton">
+					<h3>
+						<MountArrowButton
+							onClick={increase}
+							icon="➡️"
+							disabled={currentPage === totalPages}
+						/>
+					</h3>
+				</div>
+			</div>
+
+			<div className="block">
+				<div className="category">
+					<h1>Prev</h1>
+				</div>
+				<div className="descriptionNumber">
+					<h2>⬅️</h2>
+				</div>
+				<div className="demoButton">
+					<h3>
+						<MountArrowButton
+							onClick={decrease}
+							icon="⬅️"
+							disabled={currentPage === 1}
+						/>
+					</h3>
+				</div>
+			</div>
+			<div className="block">
+				<div className="category">
+					<h1>First Page</h1>
+				</div>
+				<div className="descriptionNumber">
+					<h2>1</h2>
+				</div>
+				<div className="demoButton">
+					<h3>
+						<MountButton
+							data={[1]}
+							type="FirstPage"
+							currentPage={currentPageInternal}
+							onChange={onChange}
+						/>
+					</h3>
+				</div>
+			</div>
+			<div className="block">
+				<div className="category">
+					<h1>Last Page</h1>
+				</div>
+				<div className="descriptionNumber">
+					<h2>{totalPagesInternal}</h2>
+				</div>
+				<div className="demoButton">
+					<h3>
+						<MountButton
+							data={[totalPagesInternal]}
+							type="LastPage"
+							currentPage={currentPageInternal}
+							onChange={onChange}
+						/>
+					</h3>
+				</div>
+			</div>
+		</div>
 	);
 }

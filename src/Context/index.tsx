@@ -1,34 +1,52 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
-/* eslint-disable no-promise-executor-return */
-/* eslint-disable no-unused-vars */
-import {
-	createContext,
-	useContext,
-	ReactNode,
-	useState,
-	useEffect,
-	useRef,
-} from 'react';
+import { createContext, useContext, ReactNode, useState } from 'react';
 
 type contextProps = {
-	currentPage: number;
-	totalPages: number;
-	siblingCount: number;
+	currentPageInternal: number;
+	setCurrentPageInternal: (data: number) => void;
+	totalPagesInternal: number;
+	setTotalPagesInternal: (data: number) => void;
+	siblingCountInternal: number;
+	setSiblingCountInternal: (data: number) => void;
+	siblingMinorInternal: number[];
+	setSiblingMinorInternal: (data: number[]) => void;
+	siblingMajorInternal: number[];
+	setSiblingMajorInternal: (data: number[]) => void;
+	centralNumberInternal: number;
+	setCentralNumberInternal: (data: number) => void;
 	// onChange: (data: number) => void;
 };
 
 const authContextDefaultValues: contextProps = {
-	currentPage: 1,
-	totalPages: 1,
-	siblingCount: 1,
-	// onChange: () => {
-	// 	/* This is intentional */
-	// },
+	currentPageInternal: 1,
+	setCurrentPageInternal: () => {
+		/* This is intentional */
+	},
+	totalPagesInternal: 1,
+	setTotalPagesInternal: () => {
+		/* This is intentional */
+	},
+	siblingCountInternal: 1,
+	setSiblingCountInternal: () => {
+		/* This is intentional */
+	},
+	siblingMinorInternal: [],
+	setSiblingMinorInternal: () => {
+		/* This is intentional */
+	},
+	siblingMajorInternal: [],
+	setSiblingMajorInternal: () => {
+		/* This is intentional */
+	},
+	centralNumberInternal: 1,
+	setCentralNumberInternal: () => {
+		/* This is intentional */
+	},
 };
 
 const Context = createContext<contextProps>(authContextDefaultValues);
 
-export function useAuth() {
+export function useMyContext() {
 	return useContext(Context);
 }
 
@@ -39,14 +57,30 @@ type Props = {
 };
 
 export function ContextProvider({ children, darkMode, setDarkMode }: Props) {
-	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(1);
-	const [siblingCount, setSiblingCount] = useState(1);
+	const [currentPageInternal, setCurrentPageInternal] = useState(1);
+	const [totalPagesInternal, setTotalPagesInternal] = useState(1);
+	const [siblingCountInternal, setSiblingCountInternal] = useState(1);
+	const [siblingMinorInternal, setSiblingMinorInternal] = useState<number[]>(
+		[]
+	);
+	const [siblingMajorInternal, setSiblingMajorInternal] = useState<number[]>(
+		[]
+	);
+	const [centralNumberInternal, setCentralNumberInternal] = useState(1);
 
 	const value = {
-		currentPage,
-		totalPages,
-		siblingCount,
+		currentPageInternal,
+		totalPagesInternal,
+		siblingCountInternal,
+		setCurrentPageInternal,
+		setTotalPagesInternal,
+		setSiblingCountInternal,
+		siblingMinorInternal,
+		setSiblingMinorInternal,
+		siblingMajorInternal,
+		setSiblingMajorInternal,
+		centralNumberInternal,
+		setCentralNumberInternal,
 	};
 
 	return <Context.Provider value={value}>{children}</Context.Provider>;
