@@ -41,28 +41,32 @@ export default function Pagination2({
 
 	useEffect(() => {
 		setCentralNumberInternal(
-			LocateCenterNumber({ currentPage, siblingCount, totalPages })
+			LocateCenterNumber({
+				currentPage: currentPageInternal,
+				totalPages: totalPagesInternal,
+				siblingCount: siblingCountInternal,
+			})
 		);
-	}, [currentPageInternal, siblingCountInternal, totalPagesInternal]);
+	}, [currentPageInternal, totalPagesInternal, siblingCountInternal]);
 
 	useEffect(() => {
 		setSiblingMinorInternal(
 			SiblingMinor({
-				centralNumber: centralNumberInternal,
+				currentPage: currentPageInternal,
 				siblingCount: siblingCountInternal,
 			})
 		);
-	}, [centralNumberInternal, siblingCountInternal]);
+	}, [currentPageInternal, siblingCountInternal]);
 
 	useEffect(() => {
 		setSiblingMajorInternal(
 			SiblingMajor({
-				centralNumber: centralNumberInternal,
+				currentPage: currentPageInternal,
 				siblingCount: siblingCountInternal,
 				totalPages: totalPagesInternal,
 			})
 		);
-	}, [centralNumberInternal, siblingCountInternal, totalPagesInternal]);
+	}, [currentPageInternal, siblingCountInternal, totalPagesInternal]);
 
 	useEffect(() => {
 		if (siblingCountInternal > totalPages) setSiblingCountInternal(0);
@@ -131,9 +135,11 @@ export default function Pagination2({
 						</td>
 						<td>
 							<MountButton
-								data={[
-									LocateCenterNumber({ currentPage, siblingCount, totalPages }),
-								]}
+								data={LocateCenterNumber({
+									currentPage,
+									siblingCount,
+									totalPages,
+								})}
 								type="CentralNumber"
 								currentPage={currentPageInternal}
 								onChange={onChange}
@@ -203,6 +209,53 @@ export default function Pagination2({
 					<h2>{siblingCountInternal}</h2>
 				</div>
 				<div className="demoButton"> </div>
+			</div>
+
+			<div className="containerPagination">
+				<MountArrowButton
+					onClick={decrease}
+					icon="⬅️"
+					disabled={currentPage === 1}
+				/>
+				<MountButton
+					data={[1]}
+					type="FirstPage"
+					currentPage={currentPageInternal}
+					onChange={onChange}
+				/>
+				<MountButton
+					data={siblingMinorInternal}
+					type="Minor"
+					currentPage={currentPageInternal}
+					onChange={onChange}
+				/>
+				<MountButton
+					data={LocateCenterNumber({
+						currentPage,
+						siblingCount,
+						totalPages,
+					})}
+					type="CentralNumber"
+					currentPage={currentPageInternal}
+					onChange={onChange}
+				/>
+				<MountButton
+					data={siblingMajorInternal}
+					type="Major"
+					currentPage={currentPageInternal}
+					onChange={onChange}
+				/>
+				<MountButton
+					data={[totalPagesInternal]}
+					type="LastPage"
+					currentPage={currentPageInternal}
+					onChange={onChange}
+				/>
+				<MountArrowButton
+					onClick={increase}
+					icon="➡️"
+					disabled={currentPage === totalPages}
+				/>
 			</div>
 		</div>
 	);

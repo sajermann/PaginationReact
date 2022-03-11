@@ -77,3 +77,8 @@ th{
   /* Opera */
   -o-transform: rotate(-45deg);
 }
+.containerPagination{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
