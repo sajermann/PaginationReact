@@ -6,7 +6,9 @@
     "start": "vite --open",
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+		"jest": "jest",
+		"test": "jest --silent --env=jsdom --coverage"
   },
   "dependencies": {
     "react": "^17.0.2",
