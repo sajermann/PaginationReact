@@ -14,7 +14,7 @@ export default function CentralNunmber({
 	siblingCount,
 }: Props): number[] {
 	// if (currentPage === 1 || currentPage === totalPages) {
-	// 	return [];
+	// 	return [];dasuyhdasuh
 	// }
   if(currentPage === totalPages){
     console.log('Condição sdafas')
