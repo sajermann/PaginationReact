@@ -12,8 +12,8 @@ type contextProps = {
 	setSiblingMinorInternal: (data: number[]) => void;
 	siblingMajorInternal: number[];
 	setSiblingMajorInternal: (data: number[]) => void;
-	centralNumberInternal: number[];
-	setCentralNumberInternal: (data: number[]) => void;
+	centralNumberInternal: number;
+	setCentralNumberInternal: (data: number) => void;
 	// onChange: (data: number) => void;
 };
 
@@ -38,7 +38,7 @@ const authContextDefaultValues: contextProps = {
 	setSiblingMajorInternal: () => {
 		/* This is intentional */
 	},
-	centralNumberInternal: [],
+	centralNumberInternal: 1,
 	setCentralNumberInternal: () => {
 		/* This is intentional */
 	},
@@ -66,9 +66,7 @@ export function ContextProvider({ children, darkMode, setDarkMode }: Props) {
 	const [siblingMajorInternal, setSiblingMajorInternal] = useState<number[]>(
 		[]
 	);
-	const [centralNumberInternal, setCentralNumberInternal] = useState<number[]>(
-		[]
-	);
+	const [centralNumberInternal, setCentralNumberInternal] = useState<number>(1);
 
 	const value = {
 		currentPageInternal,

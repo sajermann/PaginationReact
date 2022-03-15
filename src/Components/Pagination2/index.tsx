@@ -52,21 +52,21 @@ export default function Pagination2({
 	useEffect(() => {
 		setSiblingMinorInternal(
 			SiblingMinor({
-				currentPage: currentPageInternal,
+				currentPage: centralNumberInternal,
 				siblingCount: siblingCountInternal,
 			})
 		);
-	}, [currentPageInternal, siblingCountInternal]);
+	}, [centralNumberInternal, siblingCountInternal]);
 
 	useEffect(() => {
 		setSiblingMajorInternal(
 			SiblingMajor({
-				currentPage: currentPageInternal,
+				currentPage: centralNumberInternal,
 				siblingCount: siblingCountInternal,
 				totalPages: totalPagesInternal,
 			})
 		);
-	}, [currentPageInternal, siblingCountInternal, totalPagesInternal]);
+	}, [centralNumberInternal, siblingCountInternal, totalPagesInternal]);
 
 	useEffect(() => {
 		if (siblingCountInternal > totalPages) setSiblingCountInternal(0);
@@ -135,11 +135,13 @@ export default function Pagination2({
 						</td>
 						<td>
 							<MountButton
-								data={LocateCenterNumber({
-									currentPage,
-									siblingCount,
-									totalPages,
-								})}
+								data={[
+									LocateCenterNumber({
+										currentPage,
+										siblingCount,
+										totalPages,
+									}),
+								]}
 								type="CentralNumber"
 								currentPage={currentPageInternal}
 								onChange={onChange}
@@ -230,11 +232,13 @@ export default function Pagination2({
 					onChange={onChange}
 				/>
 				<MountButton
-					data={LocateCenterNumber({
-						currentPage,
-						siblingCount,
-						totalPages,
-					})}
+					data={[
+						LocateCenterNumber({
+							currentPage,
+							siblingCount,
+							totalPages,
+						}),
+					]}
 					type="CentralNumber"
 					currentPage={currentPageInternal}
 					onChange={onChange}
