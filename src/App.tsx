@@ -3,7 +3,7 @@ import './App.css';
 import Pagination1 from './Components/Pagination1';
 import Pagination2 from './Components/Pagination2';
 import { ContextProvider } from './Context';
-// Ajustar depois
+// Ajustar depois51
 function App() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [darkMode, setDarkMode] = useState(true);
